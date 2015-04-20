@@ -1,0 +1,40 @@
+{
+  "name": "hermes-messenger",
+  "version": "0.0.0",
+  "description": "Small warpper on top of Cross Origin postMessage",
+  "homepage": "https://github.com/JobHero/hermes-messenger",
+  "author": {
+    "name": "Jerry Reptak",
+    "email": "jreptak@gmail.com",
+    "url": "https://gojobhero.com"
+  },
+  "repository": "JobHero/hermes-messenger",
+  "license": "MIT",
+  "files": [
+    "index.js"
+  ],
+  "main": "index.js",
+  "keywords": [
+    "hermes-messenger",
+    "postmessage",
+    "browserify"
+  ],
+  "dependencies": {
+    "inherits": "^2.0.1"
+  },
+  "devDependencies": {
+    "browserify": "^9.0.8",
+    "gulp": "^3.8.11",
+    "gulp-rename": "^1.2.2",
+    "gulp-sourcemaps": "^1.5.2",
+    "gulp-uglify": "^1.2.0",
+    "gulp-util": "^3.0.4",
+    "jshint-stylish": "^1.0.1",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0"
+  },
+  "scripts": {
+    "test": "gulp test",
+    "browser": "gulp dist"
+  }
+}

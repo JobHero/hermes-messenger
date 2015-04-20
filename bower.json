@@ -1,0 +1,21 @@
+{
+  "name": "hermes-messenger",
+  "main": "dist/hermes-messenger.min.js",
+  "version": "0.0.0",
+  "homepage": "https://github.com/JobHero/hermes-messenger",
+  "authors": [
+    "Jerry Reptak <jreptak@gmail.com>"
+  ],
+  "description": "Small wrapper on top of Cross Origin postMessage",
+  "keywords": [
+    "hermes-messenger",
+    "postmessage"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "test",
+    "gulpfile.js"
+  ]
+}
