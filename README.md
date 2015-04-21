@@ -18,7 +18,8 @@ $ npm install --save hermes-messenger
 ## Usage
 
 ```js
-var Hermes = require('hermes-messenger');
+var Hermes = require('hermes-messenger'); // If using Browserify
+var Hermes = window.HermesMessenger;      // Also exports onto window
 
 var hermes = new Hermes(document.querySelector('iframe'), '*');
 
