@@ -36,9 +36,9 @@ Send a messsage to the frame
 hermes.send(data);
 ```
 
-If you want to recieve a response pass a Node style callback with data.
+If you want to recieve a response pass a Node style callback as the 2nd param.
 ```
-hermes.send({ msg: 'Yay rainbows!', callback: function(err, resp) { } });
+hermes.send({ msg: 'Yay rainbows!'}, function(err, resp) { });
 ```
 
 
@@ -73,10 +73,9 @@ hermes.send({ message: 'Testing Rainbows!' });
 
 // Send a message and wait for a response
 hermes.send({
-  message: 'How many rainbows?!',
-  callback: function(err, data) {
-  }
-});
+  message: 'How many rainbows?!'
+}, 
+function(err, data) {});
 
 // Listen for messages
 hermes.on('message', function(data) {

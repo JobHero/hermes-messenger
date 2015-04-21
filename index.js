@@ -26,7 +26,7 @@ Hermes.prototype.sendMessage = function(obj, cb) {
   }
 
   if (cb) {
-    obj.responseId = this._serializeCb(cb);
+    obj._responseId = this._serializeCb(cb);
   }
 
   text = JSON.stringify(obj);
@@ -54,18 +54,19 @@ Hermes.prototype.receiveMessage = function receiveMessage(event) {
     return;
   }
 
-  // Response to a specific request, don't emit event
-  if (json.callbackId && this.callbacks[json.callbackId]) {
-    this.callbacks[json.callbackId](json.err, json.success);
+  // Response to a specific request, don't emit event, just call cb
+  if (json._callbackId && this.callbacks[json._callbackId]) {
+    this.callbacks[json._callbackId](json.err, json.success);
     return;
   }
 
   // If expecting a response, give a way to respond
   var cb;
-  if (json.responseId) {
+  if (json._responseId) {
     cb = function(err, success) {
+      //TODO: Maybe switch this to `event.source.postMessage('blah', event.origin)`
       this.sendMessage({
-        callbackId: json.responseId,
+        _callbackId: json._responseId,
         err: err,
         success: success
       });
