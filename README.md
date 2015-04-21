@@ -2,7 +2,6 @@
 
 > Small wrapper on top of Cross Origin postMessage
 
-
 ## Install
 
 ### Bower
@@ -13,6 +12,52 @@ $ bower install --save hermes-messenger
 ### Browserify
 ```sh
 $ npm install --save hermes-messenger
+```
+
+## Docs
+
+This exports or adds to `window.HermesMessenger` a constructor to create a new instance.
+
+### Constructor
+```js
+var Hermes = require('hermes-messenger');
+new Hermes(frame, origin);
+```
+
+* `frame` is the Iframe or Frame Node Element (e.g. `document.querySelector('iframe')`)
+* `origin` is the url (with protocol) of the frame (e.g. `https://gojobhero.com`) or `*` for any origin
+
+Look at [MDN postMessage](https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage) for more info.
+
+
+### Send
+Send a messsage to the frame
+```
+hermes.send(data);
+```
+
+If you want to recieve a response pass a Node style callback with data.
+```
+hermes.send({ msg: 'Yay rainbows!', callback: function(err, resp) { } });
+```
+
+
+### Receive
+Listen on the message event.
+
+The function takes the `data` that was received and a `callback` if the sender wants a reply.
+
+```
+hermes.on('message', function(data) { });
+```
+
+You can check if you need to reply back this message by checking if a 2nd argument is passed, the callback.
+```
+hermes.on('message', function(data, callback) {
+  if (callback) {
+    cb('some err');
+  }
+});
 ```
 
 ## Usage
@@ -26,7 +71,7 @@ var hermes = new Hermes(document.querySelector('iframe'), '*');
 // Send a message to an iframe
 hermes.send({ message: 'Testing Rainbows!' });
 
-// Send a message and get a response
+// Send a message and wait for a response
 hermes.send({
   message: 'How many rainbows?!',
   callback: function(err, data) {
