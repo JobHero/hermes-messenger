@@ -10,7 +10,8 @@ var browserify = require('browserify'),
   gutil = require('gulp-util');
 
 var browserifyOpts = {
-  entries: './index.js'
+  entries: './index.js',
+  standalone: 'HermesMessenger'
 };
 
 gulp.task('dist', function() {
