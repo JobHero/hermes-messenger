@@ -30,7 +30,7 @@ Hermes.prototype.sendMessage = function(obj, cb) {
   }
 
   text = JSON.stringify(obj);
-  this.targetFrame.contentWindow.postMessage(text, this.targetDomain);
+  this.targetFrame.postMessage(text, this.targetDomain);
 };
 
 Hermes.prototype.receiveMessage = function receiveMessage(event) {

@@ -24,7 +24,7 @@ var Hermes = require('hermes-messenger');
 new Hermes(frame, origin);
 ```
 
-* `frame` is the Iframe or Frame Node Element (e.g. `document.querySelector('iframe')`)
+* `frame` is the window of the Iframe or Frame Node Element (e.g. `document.querySelector('iframe').contentWindow`)
 * `origin` is the url (with protocol) of the frame (e.g. `https://gojobhero.com`) or `*` for any origin
 
 Look at [MDN postMessage](https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage) for more info.
@@ -51,7 +51,7 @@ The function takes the `data` that was received and a `callback` if the sender w
 hermes.on('message', function(data) { });
 ```
 
-You can check if you need to reply back this message by checking if a 2nd argument is passed, the callback.
+You can check if you need to reply back to this message by checking if a 2nd argument is passed, the callback.
 ```
 hermes.on('message', function(data, callback) {
   if (callback) {
@@ -66,7 +66,7 @@ hermes.on('message', function(data, callback) {
 var Hermes = require('hermes-messenger'); // If using Browserify
 var Hermes = window.HermesMessenger;      // Also exports onto window
 
-var hermes = new Hermes(document.querySelector('iframe'), '*');
+var hermes = new Hermes(document.querySelector('iframe').contentWindow, '*');
 
 // Send a message to an iframe
 hermes.send({ message: 'Testing Rainbows!' });
