@@ -72,7 +72,7 @@ MIT © [JobHero](gojobhero.com)
 
 [npm-image]: https://badge.fury.io/js/hermes-messenger.svg
 [npm-url]: https://npmjs.org/package/hermes-messenger
-[travis-image]: https://travis-ci.org/JetFault/hermes-messenger.svg?branch=master
-[travis-url]: https://travis-ci.org/JetFault/hermes-messenger
-[daviddm-image]: https://david-dm.org/JetFault/hermes-messenger.svg?theme=shields.io
-[daviddm-url]: https://david-dm.org/JetFault/hermes-messenger
+[travis-image]: https://travis-ci.org/jobhero/hermes-messenger.svg?branch=master
+[travis-url]: https://travis-ci.org/jobhero/hermes-messenger
+[daviddm-image]: https://david-dm.org/jobhero/hermes-messenger.svg?theme=shields.io
+[daviddm-url]: https://david-dm.org/jobhero/hermes-messenger
