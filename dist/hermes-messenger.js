@@ -35,7 +35,7 @@ Hermes.prototype.send = function send(data, cb) {
 
   var text = this._serializeData(obj);
 
-  this.targetFrame.postMessage(text, this.targetDomain);
+  this.targetFrame.postMessage(text, this.targetOrigin);
 };
 
 Hermes.prototype.announceReady = function announceReady() {
