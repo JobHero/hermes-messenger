@@ -74,8 +74,9 @@ Hermes.prototype._receiveMessage = function _receiveMessage(event) {
   }
 
   // Response to a specific request, don't emit event, just call cb
-  if (json._callbackId && this.callbacks[json._callbackId]) {
+  if (json._callbackId !== undefined && this.callbacks[json._callbackId]) {
     this.callbacks[json._callbackId](json.err, json.success);
+    delete this.callbacks[json._callbackId];
     return;
   }
 
