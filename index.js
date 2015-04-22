@@ -7,7 +7,8 @@ var HERMES_READY = 'HERMES_READY';
 
 function Hermes(frame, origin) {
   this.targetFrame = frame;
-  this.targetOrigin = origin;
+  this.targetOrigin = origin || '*';
+
   this.ready = false;
 
   this.callbacks = {};

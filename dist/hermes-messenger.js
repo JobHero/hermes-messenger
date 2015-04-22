@@ -8,7 +8,8 @@ var HERMES_READY = 'HERMES_READY';
 
 function Hermes(frame, origin) {
   this.targetFrame = frame;
-  this.targetOrigin = origin;
+  this.targetOrigin = origin || '*';
+
   this.ready = false;
 
   this.callbacks = {};
@@ -19,27 +20,30 @@ function Hermes(frame, origin) {
 
 inherits(Hermes, EventEmitter);
 
-Hermes.prototype.sendMessage = function(obj, cb) {
-  var text;
-
+Hermes.prototype.sendMessage = function(data, cb) {
   if (this.destroyed) {
     throw new Error('Hermes instance already destroyed');
+  } else if (!this.targetFrame) {
+    throw new Error('Hermes not set up to send data, only receive & respond');
   }
+
+  var obj = { data: data };
 
   if (cb) {
-    obj.responseId = this._serializeCb(cb);
+    obj._responseId = this._serializeCb(cb);
   }
 
-  text = JSON.stringify(obj);
-  this.targetFrame.contentWindow.postMessage(text, this.targetDomain);
+  var text = this._serializeData(obj);
+
+  this.targetFrame.postMessage(text, this.targetDomain);
 };
 
 Hermes.prototype.receiveMessage = function receiveMessage(event) {
-  if (this.targetDomain !== '*' && event.origin !== this.targetOrigin) {
+  if (this.targetOrigin !== '*' && event.origin !== this.targetOrigin) {
     return;
   }
 
-  var json;
+  var json, _this = this;
 
   try {
     json = JSON.parse(event.data);
@@ -55,26 +59,27 @@ Hermes.prototype.receiveMessage = function receiveMessage(event) {
     return;
   }
 
-  // Response to a specific request, don't emit event
-  if (json.callbackId && this.callbacks[json.callbackId]) {
-    this.callbacks[json.callbackId](json.err, json.success);
+  // Response to a specific request, don't emit event, just call cb
+  if (json._callbackId && this.callbacks[json._callbackId]) {
+    this.callbacks[json._callbackId](json.err, json.success);
     return;
   }
 
   // If expecting a response, give a way to respond
   var cb;
-  if (json.responseId) {
+  if (json._responseId) {
     cb = function(err, success) {
-      this.sendMessage({
-        callbackId: json.responseId,
+      // Respond to the sender
+      event.source.postMessage(_this._serializeData({
+        _callbackId: json._responseId,
         err: err,
         success: success
-      });
+      }), event.origin);
     };
   }
 
   // Emit a message and give ability to respond
-  this.emit('message', json, cb);
+  this.emit('message', json.data, cb);
 };
 
 Hermes.prototype.announceReady = function() {
@@ -87,6 +92,10 @@ Hermes.prototype.destroy = function() {
   this.destroyed = true;
   this.removeAllListeners();
   window.removeEventListener('message', this.receiveMessage);
+};
+
+Hermes.prototype._serializeData = function(data) {
+  return JSON.stringify(data);
 };
 
 Hermes.prototype._serializeCb = function(cb) {
