@@ -14,12 +14,12 @@ function Hermes(frame, origin) {
   this.callbacks = {};
   this.callbackId = 0;
 
-  window.addEventListener('message', this.receiveMessage);
+  window.addEventListener('message', this._receiveMessage);
 }
 
 inherits(Hermes, EventEmitter);
 
-Hermes.prototype.sendMessage = function(data, cb) {
+Hermes.prototype.send = function send(data, cb) {
   if (this.destroyed) {
     throw new Error('Hermes instance already destroyed');
   } else if (!this.targetFrame) {
@@ -37,7 +37,19 @@ Hermes.prototype.sendMessage = function(data, cb) {
   this.targetFrame.postMessage(text, this.targetDomain);
 };
 
-Hermes.prototype.receiveMessage = function receiveMessage(event) {
+Hermes.prototype.announceReady = function announceReady() {
+  this.send({
+    type: HERMES_READY
+  });
+};
+
+Hermes.prototype.destroy = function destroy() {
+  this.destroyed = true;
+  this.removeAllListeners();
+  window.removeEventListener('message', this._receiveMessage);
+};
+
+Hermes.prototype._receiveMessage = function _receiveMessage(event) {
   if (this.targetOrigin !== '*' && event.origin !== this.targetOrigin) {
     return;
   }
@@ -81,23 +93,11 @@ Hermes.prototype.receiveMessage = function receiveMessage(event) {
   this.emit('message', json.data, cb, event.source, event.origin);
 };
 
-Hermes.prototype.announceReady = function() {
-  this.sendMessage({
-    type: HERMES_READY
-  });
-};
-
-Hermes.prototype.destroy = function() {
-  this.destroyed = true;
-  this.removeAllListeners();
-  window.removeEventListener('message', this.receiveMessage);
-};
-
-Hermes.prototype._serializeData = function(data) {
+Hermes.prototype._serializeData = function _serializeData(data) {
   return JSON.stringify(data);
 };
 
-Hermes.prototype._serializeCb = function(cb) {
+Hermes.prototype._serializeCb = function _serializeCb(cb) {
   var id = this.callbackId;
   this.callbacks[this.callbackId++] = cb;
   return id;
