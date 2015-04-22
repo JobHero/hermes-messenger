@@ -78,7 +78,7 @@ Hermes.prototype.receiveMessage = function receiveMessage(event) {
   }
 
   // Emit a message and give ability to respond
-  this.emit('message', json.data, cb);
+  this.emit('message', json.data, cb, event.source, event.origin);
 };
 
 Hermes.prototype.announceReady = function() {

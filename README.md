@@ -49,17 +49,26 @@ hermes.send('Yay stringy rainbows!', function(err, resp) { });
 ### Receive
 Listen on the message event.
 
-The function takes the `data` that was received and a `callback` if the sender wants a reply.
+The function takes the params:
+* `data` that was received
+* `callback` if the sender wants a reply. Node style.
+* `source` source message came from
+* `origin` origin message came from
 
 ```
-hermes.on('message', function(data) { });
+hermes.on('message', function(data, cb, source, origin) { });
 ```
 
 You can check if you need to reply back to this message by checking if a 2nd argument is passed, the callback.
 ```
 hermes.on('message', function(data, callback) {
+  var someErr = true;
   if (callback) {
-    cb('some err');
+    if (someErr) {
+      cb('some err');
+    } else {
+      cb(null, 'ponies');
+    }
   }
 });
 ```
@@ -106,7 +115,7 @@ hermes.on('message', function(data, cb) {
 
 ## Browser Compatibility
 
-[Cross-document message](http://caniuse.com/#feat=x-doc-messaging)
+[Cross-document messaging](http://caniuse.com/#feat=x-doc-messaging)
 
 For all versions of IE, the window must be either a Frame or Iframe. Popups won't work.
 
