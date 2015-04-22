@@ -81,7 +81,7 @@ Hermes.prototype._receiveMessage = function _receiveMessage(event) {
 
   // If expecting a response, give a way to respond
   var cb;
-  if (json._responseId) {
+  if (json._responseId !== undefined && json._responseId !== null) {
     cb = function(err, success) {
       // Respond to the sender
       event.source.postMessage(_this._serializeData({
