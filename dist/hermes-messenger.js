@@ -15,7 +15,9 @@ function Hermes(frame, origin) {
   this.callbacks = {};
   this.callbackId = 0;
 
-  window.addEventListener('message', this._receiveMessage);
+  this._messageListener = this._receiveMessage.bind(this);
+
+  window.addEventListener('message', this._messageListener);
 }
 
 inherits(Hermes, EventEmitter);
@@ -47,7 +49,7 @@ Hermes.prototype.announceReady = function announceReady() {
 Hermes.prototype.destroy = function destroy() {
   this.destroyed = true;
   this.removeAllListeners();
-  window.removeEventListener('message', this._receiveMessage);
+  window.removeEventListener('message', this._messageListener);
 };
 
 Hermes.prototype._receiveMessage = function _receiveMessage(event) {
