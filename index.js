@@ -18,27 +18,30 @@ function Hermes(frame, origin) {
 
 inherits(Hermes, EventEmitter);
 
-Hermes.prototype.sendMessage = function(obj, cb) {
-  var text;
-
+Hermes.prototype.sendMessage = function(data, cb) {
   if (this.destroyed) {
     throw new Error('Hermes instance already destroyed');
+  } else if (!this.targetFrame) {
+    throw new Error('Hermes not set up to send data, only receive & respond');
   }
+
+  var obj = { data: data };
 
   if (cb) {
     obj._responseId = this._serializeCb(cb);
   }
 
-  text = JSON.stringify(obj);
+  var text = this._serializeData(obj);
+
   this.targetFrame.postMessage(text, this.targetDomain);
 };
 
 Hermes.prototype.receiveMessage = function receiveMessage(event) {
-  if (this.targetDomain !== '*' && event.origin !== this.targetOrigin) {
+  if (this.targetOrigin !== '*' && event.origin !== this.targetOrigin) {
     return;
   }
 
-  var json;
+  var json, _this = this;
 
   try {
     json = JSON.parse(event.data);
@@ -64,17 +67,17 @@ Hermes.prototype.receiveMessage = function receiveMessage(event) {
   var cb;
   if (json._responseId) {
     cb = function(err, success) {
-      //TODO: Maybe switch this to `event.source.postMessage('blah', event.origin)`
-      this.sendMessage({
+      // Respond to the sender
+      event.source.postMessage(_this._serializeData({
         _callbackId: json._responseId,
         err: err,
         success: success
-      });
+      }), event.origin);
     };
   }
 
   // Emit a message and give ability to respond
-  this.emit('message', json, cb);
+  this.emit('message', json.data, cb);
 };
 
 Hermes.prototype.announceReady = function() {
@@ -87,6 +90,10 @@ Hermes.prototype.destroy = function() {
   this.destroyed = true;
   this.removeAllListeners();
   window.removeEventListener('message', this.receiveMessage);
+};
+
+Hermes.prototype._serializeData = function(data) {
+  return JSON.stringify(data);
 };
 
 Hermes.prototype._serializeCb = function(cb) {
